@@ -27,28 +27,28 @@ $rows = $pdo->query('SELECT m.*, u.username FROM margin_penjualan m JOIN user u 
 <h2>Data Margin Penjualan</h2>
 <?= pesan($msg) ?>
 <form method="post">
-  <input type="hidden" name="aksi" value="<?= $edit ? 'ubah' : 'tambah' ?>">
-  <?php if ($edit): ?><input type="hidden" name="idmargin_penjualan" value="<?= h($edit['idmargin_penjualan']) ?>"><?php endif; ?>
-  <input name="persen" type="number" step="0.01" min="0" placeholder="Persen (%)" required value="<?= h($edit['persen'] ?? '') ?>">
-  <select name="status">
-    <option value="1" <?= ($edit['status'] ?? 1) == 1 ? 'selected' : '' ?>>Aktif</option>
-    <option value="0" <?= ($edit['status'] ?? 1) == 0 ? 'selected' : '' ?>>Nonaktif</option>
-  </select>
-  <select name="iduser">
-    <?php foreach ($users as $u): ?>
-      <option value="<?= h($u['iduser']) ?>" <?= ($edit['iduser'] ?? '') == $u['iduser'] ? 'selected' : '' ?>><?= h($u['username']) ?></option>
-    <?php endforeach; ?>
-  </select>
-  <button><?= $edit ? 'Simpan Perubahan' : 'Tambah' ?></button>
-  <?php if ($edit): ?><a class="btn" href="margin.php">Batal</a><?php endif; ?>
+<input type="hidden" name="aksi" value="<?= $edit ? 'ubah' : 'tambah' ?>">
+<?php if ($edit): ?><input type="hidden" name="idmargin_penjualan" value="<?= h($edit['idmargin_penjualan']) ?>"><?php endif; ?>
+<input name="persen" type="number" step="0.01" min="0" placeholder="Persen (%)" required value="<?= h($edit['persen'] ?? '') ?>">
+<select name="status">
+<option value="1" <?= ($edit['status'] ?? 1) == 1 ? 'selected' : '' ?>>Aktif</option>
+<option value="0" <?= ($edit['status'] ?? 1) == 0 ? 'selected' : '' ?>>Nonaktif</option>
+</select>
+<select name="iduser">
+<?php foreach ($users as $u): ?>
+<option value="<?= h($u['iduser']) ?>" <?= ($edit['iduser'] ?? '') == $u['iduser'] ? 'selected' : '' ?>><?= h($u['username']) ?></option>
+<?php endforeach; ?>
+</select>
+<button><?= $edit ? 'Simpan Perubahan' : 'Tambah' ?></button>
+<?php if ($edit): ?><a class="btn" href="margin.php">Batal</a><?php endif; ?>
 </form>
 <table>
-  <tr><th>ID</th><th>Persen</th><th>Status</th><th>Dibuat Oleh</th><th>Dibuat</th><th>Diubah</th><th>Aksi</th></tr>
-  <?php foreach ($rows as $r): ?>
-  <tr><td><?= h($r['idmargin_penjualan']) ?></td><td><?= h($r['persen']) ?>%</td>
-      <td><?= $r['status'] ? 'Aktif' : 'Nonaktif' ?></td><td><?= h($r['username']) ?></td>
-      <td><?= h($r['created_at']) ?></td><td><?= h($r['updated_at']) ?></td>
-      <td><a href="?edit=<?= h($r['idmargin_penjualan']) ?>">Edit</a> <?= tombolHapus('idmargin_penjualan', $r['idmargin_penjualan']) ?></td></tr>
-  <?php endforeach; ?>
+<tr><th>ID</th><th>Persen</th><th>Status</th><th>Dibuat Oleh</th><th>Dibuat</th><th>Diubah</th><th>Aksi</th></tr>
+<?php foreach ($rows as $r): ?>
+<tr><td><?= h($r['idmargin_penjualan']) ?></td><td><?= h($r['persen']) ?>%</td>
+<td><?= $r['status'] ? 'Aktif' : 'Nonaktif' ?></td><td><?= h($r['username']) ?></td>
+<td><?= h($r['created_at']) ?></td><td><?= h($r['updated_at']) ?></td>
+<td><a href="?edit=<?= h($r['idmargin_penjualan']) ?>">Edit</a> <?= tombolHapus('idmargin_penjualan', $r['idmargin_penjualan']) ?></td></tr>
+<?php endforeach; ?>
 </table>
 </body></html>

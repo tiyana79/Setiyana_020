@@ -24,17 +24,17 @@ $rows = $pdo->query('SELECT * FROM role ORDER BY idrole')->fetchAll();
 <h2>Data Role</h2>
 <?= pesan($msg) ?>
 <form method="post">
-  <input type="hidden" name="aksi" value="<?= $edit ? 'ubah' : 'tambah' ?>">
-  <?php if ($edit): ?><input type="hidden" name="idrole" value="<?= h($edit['idrole']) ?>"><?php endif; ?>
-  <input name="nama_role" placeholder="Nama role" required value="<?= h($edit['nama_role'] ?? '') ?>">
-  <button><?= $edit ? 'Simpan Perubahan' : 'Tambah' ?></button>
-  <?php if ($edit): ?><a class="btn" href="role.php">Batal</a><?php endif; ?>
+<input type="hidden" name="aksi" value="<?= $edit ? 'ubah' : 'tambah' ?>">
+<?php if ($edit): ?><input type="hidden" name="idrole" value="<?= h($edit['idrole']) ?>"><?php endif; ?>
+<input name="nama_role" placeholder="Nama role" required value="<?= h($edit['nama_role'] ?? '') ?>">
+<button><?= $edit ? 'Simpan Perubahan' : 'Tambah' ?></button>
+<?php if ($edit): ?><a class="btn" href="role.php">Batal</a><?php endif; ?>
 </form>
 <table>
-  <tr><th>ID</th><th>Nama Role</th><th>Aksi</th></tr>
-  <?php foreach ($rows as $r): ?>
-  <tr><td><?= h($r['idrole']) ?></td><td><?= h($r['nama_role']) ?></td>
-      <td><a href="?edit=<?= h($r['idrole']) ?>">Edit</a> <?= tombolHapus('idrole', $r['idrole']) ?></td></tr>
-  <?php endforeach; ?>
+<tr><th>ID</th><th>Nama Role</th><th>Aksi</th></tr>
+<?php foreach ($rows as $r): ?>
+<tr><td><?= h($r['idrole']) ?></td><td><?= h($r['nama_role']) ?></td>
+<td><a href="?edit=<?= h($r['idrole']) ?>">Edit</a> <?= tombolHapus('idrole', $r['idrole']) ?></td></tr>
+<?php endforeach; ?>
 </table>
 </body></html>

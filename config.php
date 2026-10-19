@@ -1,25 +1,46 @@
-<?php
-// Koneksi database (XAMPP default: user root, password kosong)
-$pdo = new PDO('mysql:host=localhost;dbname=proyek_pbd;charset=utf8mb4', 'root', '', [
+<?php //	Koneksi database dan fungsi bantu yang dipakai semua halaman
+session_start();
+
+// Koneksi database (Laragon default: root, password kosong)
+$pdo = new PDO('mysql:host=127.0.0.1;dbname=proyek_pbd;charset=utf8mb4', 'root', '', [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
 ]);
-function tombolHapus($idField, $id) {
-    return '<form method="post" style="display:inline" onsubmit="return confirm(\'Hapus data ini?\')">'
-         . '<input type="hidden" name="aksi" value="hapus">'
-         . '<input type="hidden" name="' . $idField . '" value="' . h($id) . '"><button>Hapus</button></form>';
-}
-function pesan($m) { return $m ? '<div class="msg">' . h($m) . '</div>' : ''; }
+
 function h($s) { return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
-?>
-<!DOCTYPE html>
-<html lang="id"><head><meta charset="utf-8">
-<style>
-body{font-family:Arial,sans-serif;margin:30px;max-width:850px}
-table{border-collapse:collapse;width:100%;margin-top:15px}
-th,td{border:1px solid #ccc;padding:7px;text-align:left}th{background:#eee}
-input,select{padding:6px;margin:3px 6px 3px 0}
-.msg{background:#e8f5e9;padding:8px;margin:10px 0}
-button,.btn{padding:6px 12px;cursor:pointer}
-</style></head><body>
-<p><a href="index.php">&larr; Menu</a></p>
+
+function flash($pesan, $tipe = 'ok') { $_SESSION['flash'] = [$pesan, $tipe]; }
+function ambilFlash() {
+    if (!isset($_SESSION['flash'])) return null;
+    $f = $_SESSION['flash']; unset($_SESSION['flash']); return $f;
+}
+function redirect($url) { header('Location: ' . $url); exit; }
+
+// Terjemahkan error MySQL yang umum jadi pesan yang mudah dibaca
+function pesanError(PDOException $e) {
+    $kode = $e->errorInfo[1] ?? 0;
+    if ($kode == 1451) return 'Data tidak bisa dihapus karena masih dipakai tabel lain.';
+    if ($kode == 1452) return 'Data referensi tidak valid (induknya tidak ditemukan).';
+    if ($kode == 1062) return 'Data duplikat.';
+    return $e->getMessage();
+}
+
+// Jalankan satu aksi POST, simpan pesan, lalu redirect (pola Post-Redirect-Get)
+function aksi(callable $fn, $kembali) {
+    try { flash($fn()); }
+    catch (PDOException $e) { flash('Gagal: ' . pesanError($e), 'err'); }
+    redirect($kembali);
+}
+
+function tombolHapus($field, $id) {
+    return '<form method="post" class="inline" onsubmit="return confirm(\'Hapus data ini?\')">'
+    . '<input type="hidden" name="aksi" value="hapus">'
+    . '<input type="hidden" name="' . $field . '" value="' . h($id) . '">'
+    . '<button class="btn merah kecil">Hapus</button></form>';
+}
+function badge($aktif, $ya = 'Aktif', $tidak = 'Nonaktif') {
+    return '<span class="badge ' . ($aktif ? 'ok' : 'off') . '">' . ($aktif ? $ya : $tidak) . '</span>';
+}
+
+// Sementara, supaya halaman lama masih jalan. Hapus di tahap 5.
+function pesan($m) { return $m ? '<div class="flash ok">' . h($m) . '</div>' : ''; }
