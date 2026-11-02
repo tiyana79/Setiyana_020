@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }, 'barang.php');
 }
 $edit = null;
-if (isset($_GET['edit'])) {
+if (isset($_GET['edit'])) { //query
     $s = $pdo->prepare('SELECT * FROM barang WHERE idbarang = ?'); $s->execute([$_GET['edit']]); $edit = $s->fetch();
 }
 $satuan = $pdo->query('SELECT idsatuan, nama_satuan FROM satuan WHERE status = 1 ORDER BY nama_satuan')->fetchAll();
@@ -60,17 +60,18 @@ include 'header.php';
 </div>
 <div class="card">
 <table>
-    <tr><th>ID</th><th>Jenis</th><th>Nama</th><th>Satuan</th><th>Harga</th><th>Status</th><th>Aksi</th></tr>
+    <tr><th>ID</th><th>Jenis</th><th>Nama</th><th>Satuan</th><th>Harga</th><th>Harga Jual</th><th>Status</th><th>Aksi</th></tr>
     <?php foreach ($rows as $r): ?>
     <tr class="<?= $edit && $edit['idbarang'] == $r['idbarang'] ? 'sedang-edit' : '' ?>">
     <td><?= h($r['idbarang']) ?></td><td><?= h($r['jenis']) ?></td><td><?= h($r['nama']) ?></td>
     <td><?= h($r['nama_satuan']) ?></td>
-    <td>Rp <?= number_format($r['harga'], 0, ',', '.') ?></td>
+    <td>Rp <?= number_format($r['harga'] ?? 0, 0, ',', '.') ?></td>
+    <td><b>Rp <?= number_format($r['harga_jual'] ?? 0, 0, ',', '.') ?></b></td>
     <td><?= badge($r['status']) ?></td>
     <td><a class="btn kuning kecil" href="?edit=<?= h($r['idbarang']) ?>">Edit</a> <?= tombolHapus('idbarang', $r['idbarang']) ?></td>
     </tr>
     <?php endforeach; ?>
-    <?php if (!$rows): ?><tr><td colspan="7" class="kosong">Belum ada data.</td></tr><?php endif; ?>
+    <?php if (!$rows): ?><tr><td colspan="8" class="kosong">Belum ada data.</td></tr><?php endif; ?>
 </table>
 </div>
 <?php include 'footer.php'; ?>

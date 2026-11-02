@@ -8,6 +8,7 @@ $menu = [
     'vendor.php' => 'Vendor',
     'barang.php' => 'Barang',
     'margin.php' => 'Margin Penjualan',
+    'cek.php'    => 'Cek Database',
 ];
 $f = ambilFlash();
 ?><!DOCTYPE html>
@@ -25,3 +26,4 @@ $f = ambilFlash();
 <main class="konten">
 <h2><?= h($judul ?? '') ?></h2>
 <?php if ($f): ?><div class="flash <?= $f[1] ?>"><?= h($f[0]) ?></div><?php endif; ?>
+
